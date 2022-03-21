@@ -1,28 +1,42 @@
 version: 2.1
+commands:
+  greeting:
+    parameters: 
+      to:
+        default: "world"
+        type: string
+    steps:
+      - run: echo "Hello <<parameters.to>>"
+  update_apk:
+    steps:
+      - run: 
+          name: Update APK
+          command: |
+            apk update
+            apk upgrade 
+  install_bash:
+    steps:
+      - run:
+          name: Install Bash
+          command: |
+            apk add bash 
+  install_git:
+    steps:
+      - run:
+          name: Install Git 
+          command: |
+            apk add git 
 jobs:
   build:
     docker:
       - image: alpine:3.7
     steps:
-      - run:
-          name: Update Apk
-          command: |
-            apk update
-            apk upgrade
-      - run:
-          name: Install Bash
-          command: |
-            apk add bash 
-      - run:
-          name: Install Git 
-          command: |
-            apk add git 
+      - update_apk
+      - install_bash
+      - install_git
       - checkout
-      - run:
-          name: The First Step
-          command: |
-            echo 'Hello World!'
-            echo 'This is the delivery pipeline'
+      - greeting:
+          to: "Jeff"
       - run:
           name: Code Has Arrived 
           command: |
